@@ -10,10 +10,10 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useExpenses } from "@/context/expense-context";
-import {ExpenseChart} from "@/components/dashboard/expense-chart";
-import {ExpenseDistribution} from "@/components/dashboard/expense-distibution";
-import {MonthlyProgress} from "@/components/dashboard/monthly-progress";
-import {RecentExpenses} from "@/components/dashboard/recent-expenses";
+import { ExpenseChart } from "@/components/dashboard/expense-chart";
+import { ExpenseDistribution } from "@/components/dashboard/expense-distibution";
+import { MonthlyProgress } from "@/components/dashboard/monthly-progress";
+import { RecentExpenses } from "@/components/dashboard/recent-expenses";
 
 export default function Dashboard() {
   const { currentMonthTotal, maxMonthlyExpense, isNearLimit } = useExpenses();
@@ -143,7 +143,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <RecentExpenses />
-        </CardContent>
+          </CardContent>
         </Card>
       </div>
     </div>
