@@ -14,7 +14,7 @@ const eslintConfig = [
   ...compat.extends(
     "next",
     "next/core-web-vitals",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
   ),
   {
     files: ["**/*.ts", "**/*.tsx"],
