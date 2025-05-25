@@ -18,6 +18,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Mail, Lock, User } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { useConnection } from "@/context/ConnectionProvider";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -25,8 +27,9 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { register, isLoading } = useAuth();
+  const { isLoading } = useAuth();
   const router = useRouter();
+  const connection = useConnection();
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -62,18 +65,39 @@ export default function RegisterPage() {
       return;
     }
 
-    const success = await register(name, email, password);
-
-    if (success) {
-      toast({
-        title: "Registration successful",
-        description: "Your account has been created.",
+    try {
+      const response = await connection.post("/auth/register", {
+        name,
+        email,
+        password,
       });
-      router.push("/");
-    } else {
+
+      if (response.status === "success") {
+        toast({
+          title: "Registration successful",
+          description: "Your account has been created.",
+        });
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      } else if (response.status === "exists") {
+        toast({
+          title: "Email already exists",
+          description: "An account with this email already exists.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Registration failed",
+          description: response.message || "Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
       toast({
-        title: "Registration failed",
-        description: "There was a problem creating your account.",
+        title: "Registration error",
+        description: "Something went wrong. Please try again later.",
         variant: "destructive",
       });
     }

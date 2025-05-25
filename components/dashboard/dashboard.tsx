@@ -10,6 +10,10 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { useExpenses } from "@/context/expense-context";
+import {ExpenseChart} from "@/components/dashboard/expense-chart";
+import {ExpenseDistribution} from "@/components/dashboard/expense-distibution";
+import {MonthlyProgress} from "@/components/dashboard/monthly-progress";
+import {RecentExpenses} from "@/components/dashboard/recent-expenses";
 
 export default function Dashboard() {
   const { currentMonthTotal, maxMonthlyExpense, isNearLimit } = useExpenses();
@@ -105,14 +109,18 @@ export default function Dashboard() {
               Your expense pattern for the current month
             </CardDescription>
           </CardHeader>
-          <CardContent className="pl-2">{/*<ExpenseChart />*/}</CardContent>
+          <CardContent className="pl-2">
+            <ExpenseChart />
+          </CardContent>
         </Card>
         <Card className="col-span-1 lg:col-span-3">
           <CardHeader>
             <CardTitle>Expense Distribution</CardTitle>
             <CardDescription>Breakdown by category</CardDescription>
           </CardHeader>
-          <CardContent>{/*<ExpenseDistribution />*/}</CardContent>
+          <CardContent>
+            <ExpenseDistribution />
+          </CardContent>
         </Card>
       </div>
 
@@ -124,14 +132,18 @@ export default function Dashboard() {
               Budget utilization for the current month
             </CardDescription>
           </CardHeader>
-          <CardContent>{/*<MonthlyProgress />*/}</CardContent>
+          <CardContent>
+            <MonthlyProgress />
+          </CardContent>
         </Card>
         <Card className="col-span-1">
           <CardHeader>
             <CardTitle>Recent Expenses</CardTitle>
             <CardDescription>Your latest transactions</CardDescription>
           </CardHeader>
-          <CardContent>{/*<RecentExpenses />*/}</CardContent>
+          <CardContent>
+            <RecentExpenses />
+        </CardContent>
         </Card>
       </div>
     </div>

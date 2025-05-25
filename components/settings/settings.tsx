@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React, { useEffect } from "react";
 
 import { useState, FormEvent } from "react";
 import { useExpenses } from "@/context/expense-context";
@@ -14,17 +14,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Toast } from "@/components/ui/toast";
-import { DollarSign, Save } from "lucide-react";
+import { Save } from "lucide-react";
 import { useConnection } from "@/context/ConnectionProvider";
+import { toast } from "@/hooks/use-toast";
 
 export function Settings() {
   const { maxMonthlyExpense, setMaxMonthlyExpense } = useExpenses();
-  const [amount, setAmount] = useState(maxMonthlyExpense.toString());
+  const [amount, setAmount] = useState(() => maxMonthlyExpense.toString());
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const connection = useConnection();
-  const toast = Toast;
+
+  useEffect(() => {
+    setAmount(maxMonthlyExpense.toString());
+  }, [maxMonthlyExpense]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -52,6 +55,7 @@ export function Settings() {
           description: `Monthly expense limit set to LKR ${numAmount.toLocaleString()}`,
         });
         setError("");
+        setMaxMonthlyExpense(numAmount);
       } else {
         setError("Failed to update expense limit");
       }
@@ -82,7 +86,7 @@ export function Settings() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="max-amount" className="flex items-center gap-1">
-                <DollarSign className="h-4 w-4" /> Maximum Amount (LKR)
+                Maximum Amount (LKR)
               </Label>
               <div className="relative">
                 <Input
@@ -95,7 +99,7 @@ export function Settings() {
                   step="0.01"
                   className="pl-8 border-primary/20 focus-visible:ring-primary"
                 />
-                <span className="absolute left-3 top-2.5 text-muted-foreground">
+                <span className="absolute left-3 top-2 text-muted-foreground">
                   ₨
                 </span>
               </div>

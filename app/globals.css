@@ -62,54 +62,54 @@
   }
 }
 
-/*@layer components {*/
-/*  .mobile-nav-button {*/
-/*    @apply flex items-center justify-center w-full py-3 text-sm font-medium transition-colors rounded-md;*/
-/*  }*/
+@layer components {
+  .mobile-nav-button {
+    @apply flex items-center justify-center w-full py-3 text-sm font-medium transition-colors rounded-md;
+  }
 
-/*  .expense-card {*/
-/*    @apply relative overflow-hidden transition-all duration-300 border rounded-xl hover:shadow-md;*/
-/*  }*/
+  .expense-card {
+    @apply relative overflow-hidden transition-all duration-300 border rounded-xl hover:shadow-md;
+  }
 
-/*  .expense-card::before {*/
-/*    content: "";*/
-/*    @apply absolute top-0 left-0 w-1 h-full;*/
-/*  }*/
+  .expense-card::before {
+    content: "";
+    @apply absolute top-0 left-0 w-1 h-full;
+  }
 
-/*  .expense-card.food::before {*/
-/*    @apply bg-expense-food;*/
-/*  }*/
+  .expense-card.food::before {
+    @apply bg-expense-food;
+  }
 
-/*  .expense-card.transportation::before {*/
-/*    @apply bg-expense-transportation;*/
-/*  }*/
+  .expense-card.transportation::before {
+    @apply bg-expense-transportation;
+  }
 
-/*  .expense-card.housing::before {*/
-/*    @apply bg-expense-housing;*/
-/*  }*/
+  .expense-card.housing::before {
+    @apply bg-expense-housing;
+  }
 
-/*  .expense-card.entertainment::before {*/
-/*    @apply bg-expense-entertainment;*/
-/*  }*/
+  .expense-card.entertainment::before {
+    @apply bg-expense-entertainment;
+  }
 
-/*  .expense-card.utilities::before {*/
-/*    @apply bg-expense-utilities;*/
-/*  }*/
+  .expense-card.utilities::before {
+    @apply bg-expense-utilities;
+  }
 
-/*  .expense-card.healthcare::before {*/
-/*    @apply bg-expense-healthcare;*/
-/*  }*/
+  .expense-card.healthcare::before {
+    @apply bg-expense-healthcare;
+  }
 
-/*  .expense-card.other::before {*/
-/*    @apply bg-expense-other;*/
-/*  }*/
+  .expense-card.other::before {
+    @apply bg-expense-other;
+  }
 
-/*  .stat-card {*/
-/*    @apply relative overflow-hidden transition-all duration-300 border rounded-xl hover:shadow-md;*/
-/*  }*/
+  .stat-card {
+    @apply relative overflow-hidden transition-all duration-300 border rounded-xl hover:shadow-md;
+  }
 
-/*  .stat-card::after {*/
-/*    content: "";*/
-/*    @apply absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-500;*/
-/*  }*/
-/*}*/
+  .stat-card::after {
+    content: "";
+    @apply absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-500;
+  }
+}

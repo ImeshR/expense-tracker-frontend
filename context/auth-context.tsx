@@ -9,11 +9,13 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "@/hooks/use-toast";
 
 interface User {
   id: string;
   name: string;
   email: string;
+  maxMonthlyExpense?: number;
 }
 
 interface AuthContextType {
@@ -40,6 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           id: decoded.userId,
           name: decoded.name,
           email: decoded.email,
+          maxMonthlyExpense: decoded.maxMonthlyExpense || 0,
         });
 
         const isExpired = decoded.exp * 1000 < Date.now();
@@ -64,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         id: decoded.userId,
         name: decoded.name,
         email: decoded.email,
+        maxMonthlyExpense: decoded.maxMonthlyExpense || 0,
       };
 
       localStorage.setItem("token", token);

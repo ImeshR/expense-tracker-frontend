@@ -30,6 +30,17 @@ import {
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ExpenseForm } from "@/components/expenses/expense-form";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "@/hooks/use-toast";
 
 export function ExpenseList() {
   const { expenses, removeExpense } = useExpenses();
@@ -37,12 +48,14 @@ export function ExpenseList() {
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingExpense, setEditingExpense] = useState<
-    null | (typeof expenses)[0]
+    null | (typeof expenses)[number]
   >(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<null | string>(null);
 
-  // Filter expenses based on search term and type filter
-  const filteredExpenses = expenses.filter((expense) => {
+  const safeExpenses = expenses ?? [];
+
+  const filteredExpenses = safeExpenses.filter((expense) => {
     const matchesSearch = expense.description
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -50,19 +63,30 @@ export function ExpenseList() {
     return matchesSearch && matchesType;
   });
 
-  // Sort expenses by date (newest first)
   const sortedExpenses = [...filteredExpenses].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
-  const handleEdit = (expense: (typeof expenses)[0]) => {
+  const handleEdit = (expense: (typeof expenses)[number]) => {
     setEditingExpense(expense);
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm("Are you sure you want to delete this expense?")) {
-      removeExpense(id);
+  const handleDeleteConfirm = async () => {
+    if (!deleteTarget) return;
+    const success = await removeExpense(deleteTarget);
+    if (success) {
+      toast({
+        title: "Expense deleted",
+        description: "The expense has been successfully deleted.",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to delete the expense. Please try again.",
+        variant: "destructive",
+      });
     }
+    setDeleteTarget(null);
   };
 
   const expenseTypes: ExpenseType[] = [
@@ -75,7 +99,6 @@ export function ExpenseList() {
     "Other",
   ];
 
-  // Map expense types to our custom colors
   const getTypeColor = (type: string) => {
     const colorMap: Record<string, string> = {
       Food: "bg-expense-food text-white",
@@ -86,6 +109,7 @@ export function ExpenseList() {
       Healthcare: "bg-expense-healthcare text-white",
       Other: "bg-expense-other text-white",
     };
+    console.log("getTypeColor called with type:", type);
     return colorMap[type] || "bg-gray-500 text-white";
   };
 
@@ -103,6 +127,7 @@ export function ExpenseList() {
         </Button>
       </div>
 
+      {/* Search + Filter */}
       <div className="flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row gap-2">
           <div className="relative flex-1">
@@ -149,6 +174,7 @@ export function ExpenseList() {
         )}
       </div>
 
+      {/* Table + Card View */}
       <Tabs defaultValue="table" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="table">Table View</TabsTrigger>
@@ -205,7 +231,7 @@ export function ExpenseList() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => handleDelete(expense.id)}
+                              onClick={() => setDeleteTarget(expense.id)}
                             >
                               <Trash className="h-4 w-4" />
                               <span className="sr-only">Delete</span>
@@ -257,7 +283,7 @@ export function ExpenseList() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleDelete(expense.id)}
+                        onClick={() => setDeleteTarget(expense.id)}
                       >
                         <Trash className="h-3 w-3 mr-1" /> Delete
                       </Button>
@@ -270,6 +296,7 @@ export function ExpenseList() {
         </TabsContent>
       </Tabs>
 
+      {/* Add Expense Dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -279,6 +306,7 @@ export function ExpenseList() {
         </DialogContent>
       </Dialog>
 
+      {/* Edit Expense Dialog */}
       <Dialog
         open={!!editingExpense}
         onOpenChange={(open) => !open && setEditingExpense(null)}
@@ -295,6 +323,28 @@ export function ExpenseList() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Confirm Delete AlertDialog */}
+      <AlertDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete the expense. You cannot undo this
+              action.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

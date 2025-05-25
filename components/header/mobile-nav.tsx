@@ -13,10 +13,12 @@ export function BurgerMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { user } = useAuth();
+  const { logout } = useAuth();
 
   const handleLogout = useCallback(() => {
+    logout();
     setOpen(false);
-  }, [setOpen]);
+  }, [logout]);
 
   // Routes for authenticated users
   const authRoutes = [

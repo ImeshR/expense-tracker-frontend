@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Loader2, Mail, Lock } from "lucide-react";
 import { useConnection } from "@/context/ConnectionProvider";
+import { toast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

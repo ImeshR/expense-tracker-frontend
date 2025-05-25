@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { format } from "date-fns";
 import { Calendar, DollarSign, FileText, Tag } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 interface ExpenseFormProps {
   expense?: Expense;
@@ -82,7 +83,7 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -97,11 +98,34 @@ export function ExpenseForm({ expense, onSuccess }: ExpenseFormProps) {
     };
 
     if (expense) {
-      updateExpense({ ...expenseData, id: expense.id });
+      const res = await updateExpense({ ...expenseData, id: expense.id });
+      if (res) {
+        toast({
+          title: "Expense updated",
+          description: `Expense of LKR ${expenseData.amount.toLocaleString()} updated successfully.`,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to update expense. Please try again.",
+          variant: "destructive",
+        });
+      }
     } else {
-      addExpense(expenseData);
+      const res: boolean = await addExpense(expenseData);
+      if (res) {
+        toast({
+          title: "Expense added",
+          description: `Expense of LKR ${expenseData.amount.toLocaleString()} added successfully.`,
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to add expense. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
-
     onSuccess();
   };
 
